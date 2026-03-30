@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDLC & CMMI — Infográfico Interativo</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Fira+Code:wght@300;400;500&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#060b18; --surface:#0c1325; --surface2:#121e38;
+  --cyan:#00e5ff; --cyan2:#0097a7; --gold:#ffca28;
+  --green:#69f0ae; --text:#ddeef5; --text-dim:#5a8099;
+  --border:rgba(0,229,255,0.13); --border-gold:rgba(255,202,40,0.18);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+*::-webkit-scrollbar{width:5px;}
+*::-webkit-scrollbar-track{background:var(--bg);}
+*::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:4px;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.022) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:28px 18px 70px;}
+header{text-align:center;padding:36px 20px 30px;margin-bottom:32px;border-bottom:1px solid var(--border);position:relative;}
+header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:140px;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+.badge{display:inline-block;font-family:'Fira Code',monospace;font-size:10.5px;color:var(--cyan);border:1px solid rgba(0,229,255,0.28);padding:4px 14px;border-radius:20px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:18px;}
+h1{font-family:'Orbitron',sans-serif;font-size:clamp(28px,6vw,58px);font-weight:900;background:linear-gradient(130deg,var(--cyan) 0%,#4fc3f7 40%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:5px;line-height:1.1;}
+.header-sub{margin-top:10px;font-size:13px;color:var(--text-dim);font-weight:300;letter-spacing:0.8px;}
+.tabs{display:flex;gap:8px;margin-bottom:28px;background:var(--surface);padding:6px;border-radius:12px;border:1px solid var(--border);}
+.tab-btn{flex:1;padding:10px 14px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--text-dim);font-family:'Fira Code',monospace;font-size:12px;letter-spacing:0.5px;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.tab-btn:hover{color:var(--text);background:var(--surface2);}
+.tab-btn.active.t-sdlc{color:var(--cyan);border-color:rgba(0,229,255,0.3);background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(0,229,255,0.04));box-shadow:0 0 18px rgba(0,229,255,0.08);}
+.tab-btn.active.t-cmmi{color:var(--gold);border-color:rgba(255,202,40,0.3);background:linear-gradient(135deg,rgba(255,202,40,0.12),rgba(255,202,40,0.04));}
+.tab-btn.active.t-rel{color:var(--green);border-color:rgba(105,240,174,0.3);background:linear-gradient(135deg,rgba(105,240,174,0.1),rgba(105,240,174,0.03));}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;animation:fadeUp 0.4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.intro-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:22px;display:flex;align-items:flex-start;gap:14px;}
+.intro-card.gold{border-color:var(--border-gold);}
+.intro-card.green{border-color:rgba(105,240,174,0.18);}
+.intro-icon{font-size:30px;flex-shrink:0;margin-top:2px;}
+.intro-title{font-family:'Orbitron',sans-serif;font-size:12.5px;font-weight:700;letter-spacing:0.8px;margin-bottom:5px;color:var(--cyan);}
+.intro-card.gold .intro-title{color:var(--gold);}
+.intro-card.green .intro-title{color:var(--green);}
+.intro-text{font-size:13px;color:var(--text-dim);line-height:1.75;}
+.intro-text strong{color:var(--text);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+@media(max-width:680px){.two-col{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(0,229,255,0.055) 0%,transparent 68%);pointer-events:none;}
+.card.gold{border-color:var(--border-gold);}
+.card.gold::before{background:radial-gradient(circle at 50% 40%,rgba(255,202,40,0.045) 0%,transparent 65%);}
+#sdlc-svg{width:100%;max-width:380px;cursor:pointer;display:block;margin:0 auto;}
+.wheel-hint{font-family:'Fira Code',monospace;font-size:10.5px;color:var(--text-dim);margin-top:10px;opacity:0.65;text-align:center;}
+.detail-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;min-height:430px;}
+.detail-panel.gold{border-color:var(--border-gold);}
+.d-default{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:390px;text-align:center;gap:10px;color:var(--text-dim);}
+.d-default .big{font-size:52px;opacity:0.18;}
+.d-default p{font-family:'Fira Code',monospace;font-size:12px;}
+.d-content{display:none;}
+.d-content.show{display:block;animation:fadeUp 0.3s ease;}
+.d-icon{font-size:38px;display:block;margin-bottom:10px;}
+.d-name{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:700;margin-bottom:4px;}
+.d-short{font-family:'Fira Code',monospace;font-size:11px;color:var(--text-dim);display:block;margin-bottom:14px;}
+.d-desc{font-size:13px;line-height:1.78;color:var(--text-dim);margin-bottom:16px;}
+.d-sec{font-family:'Fira Code',monospace;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:7px;margin-top:14px;}
+.tag{display:inline-block;border-radius:20px;padding:3px 10px;font-family:'Fira Code',monospace;font-size:11px;margin:3px 2px;}
+.out-box{border-radius:8px;padding:10px 14px;font-family:'Fira Code',monospace;font-size:12px;margin-top:5px;}
+.out-box small{font-size:9px;display:block;margin-bottom:2px;opacity:0.6;letter-spacing:1.5px;}
+.pyr-title{text-align:center;font-family:'Fira Code',monospace;font-size:10.5px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:18px;}
+.pyramid{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.pyr-lvl{cursor:pointer;transition:transform 0.25s;}
+.pyr-lvl:hover{transform:scaleX(1.015);}
+.pyr-inner{display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 18px;border-radius:7px;border:1px solid transparent;transition:all 0.3s ease;}
+.pyr-num{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;opacity:0.6;white-space:nowrap;}
+.pyr-icon{font-size:17px;}
+.pyr-name{font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;white-space:nowrap;}
+.pyr-label{font-family:'Fira Code',monospace;font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;opacity:0.55;}
+.meter{display:flex;gap:5px;margin-bottom:16px;}
+.meter-bar{height:6px;border-radius:3px;flex:1;transition:background 0.3s;}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:26px;}
+@media(max-width:560px){.meta-grid{grid-template-columns:1fr;}}
+.meta-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center;border:1px solid var(--border);}
+.meta-card .mbig{font-size:38px;display:block;margin-bottom:10px;}
+.meta-card h3{font-family:'Orbitron',sans-serif;font-size:11.5px;font-weight:700;margin-bottom:7px;letter-spacing:0.5px;}
+.meta-card p{font-size:12.5px;color:var(--text-dim);line-height:1.7;}
+.meta-card strong{color:var(--text);}
+.rel-sec-title{font-family:'Fira Code',monospace;font-size:10.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:2px;text-align:center;margin-bottom:14px;}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:560px){.rel-grid{grid-template-columns:1fr;}}
+.rel-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 15px;transition:all 0.25s;}
+.rel-item:hover{border-color:rgba(105,240,174,0.3);background:var(--surface2);}
+.rel-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.rel-head .ri{font-size:18px;}
+.rel-head .rn{font-weight:700;font-size:13px;}
+.rel-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.rel-tag{font-family:'Fira Code',monospace;font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(105,240,174,0.07);border:1px solid rgba(105,240,174,0.2);color:var(--green);}
+.ws{transition:filter 0.2s,fill-opacity 0.2s;}
+.ws:hover{filter:brightness(1.35) drop-shadow(0 0 7px rgba(0,229,255,0.5));}
+.ws.active{filter:brightness(1.5) drop-shadow(0 0 12px rgba(0,229,255,0.65));animation:pglow 2.2s ease-in-out infinite;}
+@keyframes pglow{0%,100%{filter:brightness(1.5) drop-shadow(0 0 8px rgba(0,229,255,0.5));}50%{filter:brightness(1.6) drop-shadow(0 0 18px rgba(0,229,255,0.8));}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="badge">// Engenharia de Software</div>
+  <h1>SDLC & CMMI</h1>
+  <p class="header-sub">Ciclo de Vida de Desenvolvimento · Integração de Modelos de Maturidade</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn t-sdlc active" onclick="switchTab('sdlc',this)">SDLC</button>
+  <button class="tab-btn t-cmmi" onclick="switchTab('cmmi',this)">CMMI</button>
+</div>
+
+<!-- SDLC -->
+<div class="tab-pane active" id="tab-sdlc">
+  <div class="intro-card">
+    <div>
+      <div class="intro-title">SDLC — Software Development Life Cycle</div>
+      <div class="intro-text">O SDLC define as etapas necessárias para criar software de qualidade, organizando o desenvolvimento em fases estruturadas — do planejamento à manutenção. Cada fase tem entradas, atividades e saídas bem definidas. <strong>Clique em qualquer fatia do ciclo para explorar seus detalhes.</strong></div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <svg id="sdlc-svg" viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="wheel-hint">← clique nas fatias para explorar</div>
+    </div>
+    <div class="detail-panel" id="sdlc-panel">
+      <div class="d-default" id="sdlc-def">
+        <p>Selecione uma fase</p>
+        <p style="opacity:0.45;font-size:10.5px;margin-top:4px">do ciclo ao lado</p>
+      </div>
+      <div class="d-content" id="sdlc-det">
+        <div class="d-name" id="d-name"></div>
+        <span class="d-short" id="d-short"></span>
+        <div class="d-desc" id="d-desc"></div>
+        <div class="d-sec">// atividades</div>
+        <div id="d-acts"></div>
+        <div class="d-sec">// entregável principal</div>
+        <div class="out-box" id="d-out-box"><small>OUTPUT</small><span id="d-out"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CMMI -->
+<div class="tab-pane" id="tab-cmmi">
+  <div class="intro-card gold">
+    <div>
+      <div class="intro-title">CMMI — Capability Maturity Model Integration</div>
+      <div class="intro-text">O CMMI avalia o grau de maturidade dos processos de desenvolvimento em 5 níveis — do caótico ao otimizado. Ele não define <em>o que</em> fazer, mas <em>quão bem</em> a organização faz o que faz. <strong>Clique em cada nível da pirâmide para explorar.</strong></div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="card gold">
+      <div class="pyr-title">// Pirâmide de Maturidade CMMI</div>
+      <div class="pyramid" id="cmmi-pyr"></div>
+    </div>
+    <div class="detail-panel gold">
+      <div class="d-default" id="cmmi-def">
+        <p>Selecione um nível</p>
+        <p style="opacity:0.45;font-size:10.5px;margin-top:4px">da pirâmide ao lado</p>
+      </div>
+      <div class="d-content" id="cmmi-det">
+        <div class="meter" id="c-meter"></div>
+        <div id="c-badge" style="font-family:'Fira Code',monospace;font-size:10.5px;margin-bottom:7px;"></div>
+        <div class="d-name" id="c-name"></div>
+        <span id="c-label" style="font-family:'Fira Code',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:14px;"></span>
+        <div class="d-desc" id="c-desc"></div>
+        <div class="d-sec">// características</div>
+        <div id="c-chars"></div>
+        <div id="c-pa-sec">
+          <div class="d-sec">// áreas de processo (PAs)</div>
+          <div id="c-pas"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+<script>
+const SDLC=[
+  {name:"Planejamento",icon:"🎯",color:"#00e5ff",short:"Definição de escopo, cronograma e recursos",desc:"Define o escopo do projeto, aloca recursos, estima custos e analisa riscos. É a fase que determina a viabilidade antes de qualquer código ser escrito. Um planejamento sólido pode ser a diferença entre o sucesso e o fracasso do projeto.",acts:["Análise de viabilidade","Estimativa de custos e prazos","Cronograma do projeto","Análise de riscos","Plano de projeto formal"],out:"Plano de Projeto (Project Plan)"},
+  {name:"Requisitos",icon:"📋",color:"#4fc3f7",short:"Elicitação e documentação das necessidades",desc:"Coleta e documenta o que o sistema deve fazer. Envolve stakeholders e traduz necessidades do negócio em requisitos técnicos e funcionais. Erros nessa fase são os mais caros de corrigir ao longo do ciclo.",acts:["Entrevistas com stakeholders","Workshops e brainstorm","Modelagem de casos de uso","Prototipagem rápida","Especificação de requisitos"],out:"Documento de Requisitos — SRS"},
+  {name:"Design",icon:"📐",color:"#b388ff",short:"Arquitetura e modelagem do sistema",desc:"Transforma os requisitos em uma planta do sistema. Define arquitetura de software, banco de dados, interfaces e componentes. É aqui que as decisões técnicas mais fundamentais são tomadas antes do desenvolvimento.",acts:["Arquitetura de software","Modelagem de dados (ER)","Design de interface UX/UI","Design de componentes","Revisão técnica formal"],out:"Documento de Design do Sistema — SDS"},
+  {name:"Implementação",icon:"💻",color:"#69f0ae",short:"Codificação e construção do sistema",desc:"Os desenvolvedores escrevem o código seguindo o design definido. É a fase mais visível — onde o sistema ganha vida. Boas práticas de código, revisão entre pares e controle de versão são essenciais aqui.",acts:["Codificação por módulos","Code review entre pares","Controle de versão (Git)","Integração de módulos","Documentação técnica inline"],out:"Software executável / Build"},
+  {name:"Testes",icon:"🧪",color:"#ffab40",short:"Verificação e validação da qualidade",desc:"Detecta defeitos antes do produto chegar ao usuário. Inclui diferentes níveis de teste para garantir que o software funciona como esperado e atende a todos os requisitos definidos nas fases anteriores.",acts:["Testes unitários","Testes de integração","Testes de sistema","Testes de aceite (UAT)","Registro e correção de bugs"],out:"Relatório de Testes / Software homologado"},
+  {name:"Implantação",icon:"🚀",color:"#f48fb1",short:"Entrega do sistema ao ambiente de produção",desc:"O sistema é disponibilizado para os usuários finais. Inclui treinamento, migração de dados e configuração do ambiente de produção. É o momento do go-live, com suporte intensivo imediato.",acts:["Deploy em produção","Migração de dados","Treinamento de usuários","Go-live / cutover","Suporte inicial (hypercare)"],out:"Sistema em produção"},
+  {name:"Manutenção",icon:"🔧",color:"#80deea",short:"Suporte e evolução contínua do sistema",desc:"A fase mais longa do ciclo. Corrige bugs em produção, adapta o sistema a mudanças no ambiente e implementa novas funcionalidades. É contínua e garante a longevidade do software entregue.",acts:["Correção de bugs (hotfixes)","Atualizações e patches","Novas funcionalidades","Monitoramento de performance","Adaptações legais e regulatórias"],out:"Sistema atualizado / Nova versão"}
+];
+
+const CMMI=[
+  {level:1,name:"Inicial",label:"CAÓTICO",icon:"🔥",color:"#ef5350",desc:"Processos imprevisíveis e completamente reativos. O sucesso depende do esforço heróico de pessoas específicas. Cada projeto é uma aventura única — os resultados não são replicáveis entre projetos.",chars:["Sem processos documentados","Resultados totalmente imprevisíveis","Depende de 'heróis' na equipe","Prazos frequentemente estourados","Qualidade inconsistente entre projetos"],pa:[]},
+  {level:2,name:"Gerenciado",label:"REATIVO",icon:"📊",color:"#ff7043",desc:"Projetos são planejados, monitorados e controlados individualmente. Boas práticas existem, mas ficam restritas ao projeto — não são compartilhadas por toda a organização.",chars:["Planejamento formal de projeto","Rastreamento de requisitos","Controle básico de configuração","Garantia de qualidade presente","Medições básicas de performance"],pa:["PP – Planejamento de Projeto","PMC – Monitoramento e Controle de Projeto","REQM – Gestão de Requisitos","CM – Gestão de Configuração","PPQA – Garantia de Qualidade","MA – Medição e Análise"]},
+  {level:3,name:"Definido",label:"PROATIVO",icon:"📚",color:"#ffa726",desc:"Processos padronizados em toda a organização. Existe um conjunto de processos organizacionais que todos os projetos seguem e adaptam às suas necessidades específicas.",chars:["Processos documentados e padronizados","Capacitação e treinamento formais","Revisões técnicas entre pares","Análise estruturada de decisões","Integração de produto definida"],pa:["OPD – Definição de Processos Org.","OPF – Foco em Processos Org.","OT – Treinamento Organizacional","RD – Desenvolvimento de Requisitos","TS – Solução Técnica","VER – Verificação","VAL – Validação","DAR – Análise e Resolução de Decisão"]},
+  {level:4,name:"Ger. Quantitativamente",label:"MEDIDO",icon:"📈",color:"#66bb6a",desc:"Processos controlados com dados estatísticos e quantitativos. A organização usa métricas para gerenciar qualidade e performance de forma objetiva e previsível — indo além da intuição.",chars:["Controle estatístico de processos","Metas de qualidade quantitativas","Análise de causas de variação","Sub-processos medidos com precisão","Previsões baseadas em dados históricos"],pa:["OPP – Performance de Processos Org.","QPM – Gestão Quantitativa de Projetos"]},
+  {level:5,name:"Em Otimização",label:"INOVADOR",icon:"⚡",color:"#26c6da",desc:"Melhoria contínua e inovação fazem parte da cultura organizacional. A empresa identifica proativamente oportunidades de melhoria, previne defeitos e adota inovações de forma sistemática.",chars:["Melhoria contínua de processos","Gestão de causas-raiz de problemas","Inovação tecnológica sistemática","Prevenção proativa de defeitos","Aprendizado e adaptação contínuos"],pa:["CAR – Análise e Resolução de Causas","OPM – Gestão de Performance Org."]}
+];
+
+const RELS=[
+  {icon:"🎯",name:"Planejamento",pas:["PP – Planejamento de Projeto","PMC – Monitoramento e Controle","MA – Medição e Análise"]},
+  {icon:"📋",name:"Requisitos",pas:["REQM – Gestão de Requisitos","RD – Desenvolvimento de Requisitos","DAR – Análise de Decisão"]},
+  {icon:"📐",name:"Design",pas:["TS – Solução Técnica","VER – Verificação","DAR – Análise de Decisão"]},
+  {icon:"💻",name:"Implementação",pas:["TS – Solução Técnica","CM – Gestão de Configuração","PPQA – Garantia de Qualidade"]},
+  {icon:"🧪",name:"Testes",pas:["VER – Verificação","VAL – Validação","PPQA – Garantia de Qualidade"]},
+  {icon:"🚀",name:"Implantação",pas:["CM – Gestão de Configuração","VAL – Validação","PMC – Monitoramento e Controle"]},
+  {icon:"🔧",name:"Manutenção",pas:["CM – Gestão de Configuração","CAR – Análise de Causas","PMC – Monitoramento e Controle"]}
+];
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function polar(cx,cy,r,deg){const rad=deg*Math.PI/180;return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)};}
+function arc(cx,cy,ro,ri,a1,a2){
+  const p1=polar(cx,cy,ro,a1),p2=polar(cx,cy,ro,a2);
+  const q1=polar(cx,cy,ri,a1),q2=polar(cx,cy,ri,a2);
+  const laf=a2-a1>180?1:0;
+  return `M${p1.x},${p1.y} A${ro},${ro} 0 ${laf} 1 ${p2.x},${p2.y} L${q2.x},${q2.y} A${ri},${ri} 0 ${laf} 0 ${q1.x},${q1.y} Z`;
+}
+function ns(t){return document.createElementNS('http://www.w3.org/2000/svg',t);}
+
+function buildWheel(){
+  const svg=document.getElementById('sdlc-svg');
+  const cx=220,cy=220,ro=198,ri=78,gap=3;
+  const n=SDLC.length,seg=360/n,s0=-90;
+  svg.innerHTML='';
+  [[212,.05],[198,.09],[78,.12],[58,.05]].forEach(([r,op])=>{
+    const c=ns('circle');
+    c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',r);
+    c.setAttribute('fill','none');c.setAttribute('stroke','#00e5ff');c.setAttribute('stroke-opacity',op);
+    svg.appendChild(c);
+  });
+  for(let i=0;i<n;i++){
+    const a=s0+i*seg;
+    const p1=polar(cx,cy,205,a),p2=polar(cx,cy,199,a);
+    const l=ns('line');l.setAttribute('x1',p1.x);l.setAttribute('y1',p1.y);l.setAttribute('x2',p2.x);l.setAttribute('y2',p2.y);
+    l.setAttribute('stroke','#00e5ff');l.setAttribute('stroke-opacity','0.28');l.setAttribute('stroke-width','1.5');
+    svg.appendChild(l);
+  }
+  SDLC.forEach((ph,i)=>{
+    const a1=s0+i*seg+gap/2,a2=s0+(i+1)*seg-gap/2,mid=(a1+a2)/2;
+    const path=ns('path');
+    path.setAttribute('d',arc(cx,cy,ro,ri,a1,a2));
+    path.setAttribute('fill',ph.color);path.setAttribute('fill-opacity','0.18');
+    path.setAttribute('stroke',ph.color);path.setAttribute('stroke-opacity','0.55');
+    path.setAttribute('stroke-width','1');path.setAttribute('class','ws');path.dataset.i=i;
+    path.addEventListener('mouseenter',()=>{if(!path.classList.contains('active')){path.setAttribute('fill-opacity','0.38');path.setAttribute('stroke-opacity','0.9');}});
+    path.addEventListener('mouseleave',()=>{if(!path.classList.contains('active')){path.setAttribute('fill-opacity','0.18');path.setAttribute('stroke-opacity','0.55');}});
+    path.addEventListener('click',()=>pickPhase(i));
+    svg.appendChild(path);
+    const lr=(ro+ri)/2,lp=polar(cx,cy,lr,mid);
+    const g=ns('g');g.style.pointerEvents='none';
+    const ico=ns('text');ico.setAttribute('x',lp.x);ico.setAttribute('y',lp.y-9);
+    ico.setAttribute('text-anchor','middle');ico.setAttribute('dominant-baseline','middle');
+    ico.setAttribute('font-size','19');ico.textContent=ph.icon;
+    const txt=ns('text');txt.setAttribute('x',lp.x);txt.setAttribute('y',lp.y+12);
+    txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','middle');
+    txt.setAttribute('fill',ph.color);txt.setAttribute('font-family','Nunito,sans-serif');
+    txt.setAttribute('font-size','8');txt.setAttribute('font-weight','700');txt.textContent=ph.name;
+    g.appendChild(ico);g.appendChild(txt);svg.appendChild(g);
+  });
+  const cg=ns('g');
+  const ct=ns('text');ct.setAttribute('x',cx);ct.setAttribute('y',cy-8);ct.setAttribute('text-anchor','middle');
+  ct.setAttribute('fill','#00e5ff');ct.setAttribute('font-family','Orbitron,sans-serif');
+  ct.setAttribute('font-size','13');ct.setAttribute('font-weight','900');ct.setAttribute('letter-spacing','2');ct.textContent='SDLC';
+  const cs=ns('text');cs.setAttribute('x',cx);cs.setAttribute('y',cy+10);cs.setAttribute('text-anchor','middle');
+  cs.setAttribute('fill','#3a607a');cs.setAttribute('font-family','Fira Code,monospace');cs.setAttribute('font-size','8');cs.textContent='7 FASES';
+  cg.appendChild(ct);cg.appendChild(cs);svg.appendChild(cg);
+}
+
+function pickPhase(i){
+  const ph=SDLC[i];
+  document.querySelectorAll('.ws').forEach((s,si)=>{
+    if(si===i){s.setAttribute('fill-opacity','0.5');s.setAttribute('stroke-opacity','1');s.setAttribute('stroke-width','2');s.classList.add('active');}
+    else{s.setAttribute('fill-opacity','0.1');s.setAttribute('stroke-opacity','0.3');s.setAttribute('stroke-width','1');s.classList.remove('active');}
+  });
+  document.getElementById('sdlc-def').style.display='none';
+  document.getElementById('sdlc-det').classList.add('show');
+  const dn=document.getElementById('d-name');dn.textContent=ph.name;dn.style.color=ph.color;
+  const ds=document.getElementById('d-short');ds.textContent=ph.short;ds.style.color=ph.color;
+  document.getElementById('d-desc').textContent=ph.desc;
+  document.getElementById('d-acts').innerHTML=ph.acts.map(a=>`<span class="tag" style="color:${ph.color};border:1px solid ${ph.color}44;background:${ph.color}12">${a}</span>`).join('');
+  const ob=document.getElementById('d-out-box');ob.style.cssText=`background:${ph.color}0f;border:1px solid ${ph.color}33;color:${ph.color};border-radius:8px;padding:10px 14px;font-family:'Fira Code',monospace;font-size:12px;margin-top:5px;`;
+  document.getElementById('d-out').textContent=ph.out;
+}
+
+function buildPyramid(){
+  const pyr=document.getElementById('cmmi-pyr');
+  const widths=[190,255,320,390,460];
+  [...CMMI].reverse().forEach((lvl,ri)=>{
+    const origIdx=CMMI.length-1-ri,w=widths[ri];
+    const div=document.createElement('div');div.className='pyr-lvl';div.dataset.idx=origIdx;
+    const inner=document.createElement('div');inner.className='pyr-inner';
+    inner.style.cssText=`width:${w}px;background:linear-gradient(135deg,${lvl.color}22,${lvl.color}0d);border-color:${lvl.color}55;color:${lvl.color};`;
+    inner.innerHTML=`<span class="pyr-num">NÍV.${lvl.level}</span><div><div class="pyr-name" style="color:${lvl.color}">${lvl.name}</div><div class="pyr-label" style="color:${lvl.color}">${lvl.label}</div></div>`;
+    div.appendChild(inner);
+    div.addEventListener('click',()=>pickLevel(origIdx));
+    pyr.appendChild(div);
+  });
+}
+
+function pickLevel(i){
+  const lvl=CMMI[i];
+  document.querySelectorAll('.pyr-lvl').forEach(el=>{
+    const l=CMMI[+el.dataset.idx],inn=el.querySelector('.pyr-inner');
+    inn.style.background=`linear-gradient(135deg,${l.color}22,${l.color}0d)`;
+    inn.style.borderColor=l.color+'55';inn.style.boxShadow='';
+  });
+  const active=document.querySelector(`.pyr-lvl[data-idx="${i}"]`);
+  if(active){const inn=active.querySelector('.pyr-inner');inn.style.background=`linear-gradient(135deg,${lvl.color}3a,${lvl.color}1a)`;inn.style.borderColor=lvl.color+'aa';inn.style.boxShadow=`0 0 28px ${lvl.color}35`;}
+  document.getElementById('cmmi-def').style.display='none';
+  document.getElementById('cmmi-det').classList.add('show');
+  document.getElementById('c-meter').innerHTML=CMMI.map((l,li)=>`<div class="meter-bar" style="background:${li<=i?l.color:'#1a2840'}"></div>`).join('');
+  const cb=document.getElementById('c-badge');cb.textContent=`// NÍVEL ${lvl.level} DE 5`;cb.style.color=lvl.color;
+  const cn=document.getElementById('c-name');cn.textContent=lvl.name;cn.style.color=lvl.color;
+  const cl=document.getElementById('c-label');cl.textContent='[ '+lvl.label+' ]';cl.style.color=lvl.color;
+  document.getElementById('c-desc').textContent=lvl.desc;
+  document.getElementById('c-chars').innerHTML=lvl.chars.map(c=>`<span class="tag" style="color:${lvl.color};border:1px solid ${lvl.color}44;background:${lvl.color}10">${c}</span>`).join('');
+  const pasec=document.getElementById('c-pa-sec'),pasDiv=document.getElementById('c-pas');
+  if(lvl.pa.length){pasec.style.display='block';pasDiv.innerHTML=lvl.pa.map(p=>`<div style="font-family:'Fira Code',monospace;font-size:10.5px;padding:5px 0;border-bottom:1px solid ${lvl.color}1a;color:${lvl.color}cc">${p}</div>`).join('');}
+  else{pasec.style.display='none';}
+}
+
+function buildRelations(){
+  const grid=document.getElementById('rel-grid');
+  RELS.forEach(r=>{
+    const div=document.createElement('div');div.className='rel-item';
+    div.innerHTML=`<div class="rel-head"><span class="ri">${r.icon}</span><span class="rn">${r.name}</span></div><div class="rel-tags">${r.pas.map(p=>`<span class="rel-tag">${p}</span>`).join('')}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+buildWheel();buildPyramid();
+</script>
+</body>
+</html>
